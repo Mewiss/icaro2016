@@ -1,0 +1,1 @@
+/home/pi/workspace/Larc2016/CamaravVasos/build/CMakeFiles/simpletest_raspicam_cv.dir

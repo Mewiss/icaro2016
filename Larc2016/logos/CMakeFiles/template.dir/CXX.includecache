@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/pi/workspace/Larc2016/logos/match.cpp
+opencv2/core/core.hpp
+/home/pi/workspace/Larc2016/logos/opencv2/core/core.hpp
+opencv2/imgproc/imgproc.hpp
+/home/pi/workspace/Larc2016/logos/opencv2/imgproc/imgproc.hpp
+opencv2/imgcodecs.hpp
+/home/pi/workspace/Larc2016/logos/opencv2/imgcodecs.hpp
+opencv2/highgui/highgui.hpp
+/home/pi/workspace/Larc2016/logos/opencv2/highgui/highgui.hpp
+iostream
+-
+math.h
+-
+string.h
+-
+

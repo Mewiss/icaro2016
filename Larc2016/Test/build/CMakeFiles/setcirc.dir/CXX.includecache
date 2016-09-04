@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/pi/workspace/Larc2016/Test/houghcircles.cpp
+opencv2/imgcodecs.hpp
+/home/pi/workspace/Larc2016/Test/opencv2/imgcodecs.hpp
+opencv2/highgui/highgui.hpp
+/home/pi/workspace/Larc2016/Test/opencv2/highgui/highgui.hpp
+opencv2/imgproc/imgproc.hpp
+/home/pi/workspace/Larc2016/Test/opencv2/imgproc/imgproc.hpp
+iostream
+-
+

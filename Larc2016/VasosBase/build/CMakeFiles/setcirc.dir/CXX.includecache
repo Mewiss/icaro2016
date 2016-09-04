@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/pi/workspace/Larc2016/VasosBase/circulos.cpp
+opencv2/imgproc/imgproc.hpp
+/home/pi/workspace/Larc2016/VasosBase/opencv2/imgproc/imgproc.hpp
+opencv2/imgcodecs.hpp
+/home/pi/workspace/Larc2016/VasosBase/opencv2/imgcodecs.hpp
+opencv2/highgui/highgui.hpp
+/home/pi/workspace/Larc2016/VasosBase/opencv2/highgui/highgui.hpp
+iostream
+-
+
