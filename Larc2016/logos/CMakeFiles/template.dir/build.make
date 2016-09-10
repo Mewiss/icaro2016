@@ -81,6 +81,9 @@ template_EXTERNAL_OBJECTS =
 
 template: CMakeFiles/template.dir/match.cpp.o
 template: CMakeFiles/template.dir/build.make
+template: /opt/vc/lib/libmmal_core.so
+template: /opt/vc/lib/libmmal_util.so
+template: /opt/vc/lib/libmmal.so
 template: /usr/local/lib/libopencv_xphoto.so.3.0.0
 template: /usr/local/lib/libopencv_xobjdetect.so.3.0.0
 template: /usr/local/lib/libopencv_ximgproc.so.3.0.0

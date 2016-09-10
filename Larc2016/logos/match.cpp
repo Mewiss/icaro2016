@@ -10,6 +10,20 @@
 #include <iostream>
 #include <math.h>
 #include <string.h>
+#include <fstream>
+#include <sstream>
+#include <iomanip>
+#include <stdexcept>
+
+#include <opencv2/core/utility.hpp>
+//#include "opencv2/cudaobjdetect.hpp"
+#include "opencv2/objdetect.hpp"
+
+#include <ctime>
+#include <raspicam/raspicam_cv.h>
+
+
+
 
 using namespace cv;
 using namespace std;
@@ -18,6 +32,9 @@ using namespace std;
 
 int thresh = 50, N = 11;
 const char* wndname = "Square Detection Demo";
+
+HOGDescriptor hog(Size(64,64),Size(32,32),Size(32,32),Size(32,32),9);
+
 
 // helper function:
 // finds a cosine of angle between vectors
@@ -113,115 +130,260 @@ static void findSquares( const Mat& image, vector<vector<Point> >& squares )
     }
 }
 
-static vector<vector<Point> > selectSquares(vector<vector<Point> >& squares ){
+static void selectSquares(const vector<vector<Point> >& squares,vector<vector<Point> > & sq, vector<Point>& centers ){
 //dejar solo cuadrados no concentricos
 
 
 	vector<vector<Point> > s_accepted;
+	centers.clear();
 
     for( size_t i = 0; i < squares.size(); i++ )
     {
         const Point* p = &squares[i][0];
-	
-	float a=(p[0].x+p[1].x+p[2].x+p[3].x)/4;
-	float b=(p[0].y+p[1].y+p[2].y+p[3].y)/4;
-	Point c= Point (a,b);//center
-	Point d= c-p[0];
-	
-	bool flag=false;
 
-	for(size_t j=0; j<s_accepted.size();j++){
-		const Point* p_ = &s_accepted[j][0];
-		float a_=(p_[0].x+p_[1].x+p_[2].x+p_[3].x)/4;
-		float b_=(p_[0].y+p_[1].y+p_[2].y+p_[3].y)/4;
-		Point c_= Point (a_,b_);//center
-		Point d_=c_-p_[0];
+		float a=(p[0].x+p[1].x+p[2].x+p[3].x)/4;
+		float b=(p[0].y+p[1].y+p[2].y+p[3].y)/4;
+		Point c= Point (a,b);//center
+		Point d= c-p[0];
 
-		double dist=norm(c-c_);
+		bool flag=false;
 
-		if(dist<12)
-		{
-		if(norm(d)<norm(d_))
-			flag=true;
-		else		
-			s_accepted.erase(s_accepted.begin()+j);
+		for(size_t j=0; j<s_accepted.size();j++){
+			const Point* p_ = &s_accepted[j][0];
+			float a_=(p_[0].x+p_[1].x+p_[2].x+p_[3].x)/4;
+			float b_=(p_[0].y+p_[1].y+p_[2].y+p_[3].y)/4;
+			Point c_= Point (a_,b_);//center
+			Point d_=c_-p_[0];
+
+			double dist=norm(c-c_);
+
+			if(dist<12)
+			{
+				if(norm(d)<norm(d_))
+					flag=true;
+
+				else{
+					s_accepted.erase(s_accepted.begin()+j);
+					centers.erase(centers.begin()+j);
+						}
+
+			}
 		}
+		if(!flag) {
+			centers.push_back(c);
+			vector<Point> orderS;
+
+			//punto arriba y a la derecha
+			for(int k=0;k<4;k++){
+				if(p[k].x>=c.x && p[k].y<c.y){
+					orderS.push_back(p[k]);
+					continue;}
+			}
+
+			//punto abajo y a la derecha
+			for(int k=0;k<4;k++){
+				if(p[k].x>=c.x && p[k].y>=c.y){
+					orderS.push_back(p[k]);
+					continue;}
+			}
+
+			//punto abajo y a la izquierda
+			for(int k=0;k<4;k++){
+				if(p[k].x<c.x && p[k].y>=c.y){
+					orderS.push_back(p[k]);
+					continue;}
+				}
+
+			//punto arriba y a la izquierda
+			for(int k=0;k<4;k++){
+				if(p[k].x<c.x && p[k].y<c.y){
+					orderS.push_back(p[k]);
+					continue;}
+				}
+
+			s_accepted.push_back(orderS);
+
 	}
-	if(!flag) {
-	//c_accepted.push_back(c);
-	//sizes.push_back(a+b);
-	s_accepted.push_back(squares[i]);
-	}
-	
+
     }
 
 
-	return  s_accepted;
+	sq= s_accepted;
 }
-// the function draws all the squares in the image 
-static void drawSquares( Mat& image, const vector<vector<Point> >& squares )
+
+static vector<Mat> drawSquares( Mat& image, const vector<vector<Point> >& squares)
 {
-	int j=0;
+	vector<Mat> images;
     for( size_t i = 0; i < squares.size(); i++ )
     {
-	j++;
         const Point* p = &squares[i][0];
-	
-	int n = (int)squares[i].size();
+		int n = (int)squares[i].size();
 
+		Point2f srcTri[3],dstTri[3];
+		srcTri[0]=p[3];
+		srcTri[1]=p[2];
+		srcTri[2]=p[1];
+		dstTri[0]=Point2f(0,0);
+		dstTri[1]=Point2f(0,63);
+		dstTri[2]=Point2f(63,63);
 
-        
-	int minx=100000;
-	int miny=100000;
-	int maxx=0;
-	int maxy=0;
-	
-	for(int k=0; k<4; k++)
-	{
-	if(p[k].x<minx) minx=p[k].x;
-	if(p[k].y<miny) miny=p[k].y;
-	if(p[k].x>maxx) maxx=p[k].x;
-	if(p[k].y>maxy) maxy=p[k].y;
-	}
-	Rect rect=Rect(minx,miny,maxx-minx+1,maxy-miny+1);
-	Mat small=image(rect);
-	char num[21];
-	sprintf(num,"%d",j);
-	imshow(num,small);
-	
-	polylines(image, &p, &n, 1, true, Scalar(255,0,0), 3, LINE_AA);
-	
+		Mat warp_mat=getAffineTransform(srcTri,dstTri);
+		Mat dst;
+		warpAffine(image,dst,warp_mat,image.size());
+
+		Rect rect=Rect(0,0,64,64);
+		Mat small=dst(rect);
+		images.push_back(small);
+
+		polylines(image, &p, &n, 1, true, Scalar(255,0,0), 3, LINE_AA);
+
 
     }
 
-    imshow(wndname, image);
 
+
+	return images;
 
 }
 
-
-int main(int /*argc*/, char** /*argv*/)
+float Dist(vector<float> a, vector<float> b)
 {
-	namedWindow( wndname, 1 );
-    vector<vector<Point> > squares;
-        Mat image = imread("image30.jpg", 1);
-        if( image.empty() )
-        {
-            cout << "Couldn't load " << endl;
+	return (float) compareHist(a,b,CV_COMP_CORREL);
 
+}
+/////////
+
+/*int main(int argc,char**argv){
+    raspicam::RaspiCam_Cv Camera;
+   Camera.set( CV_CAP_PROP_FORMAT, CV_8UC3 );
+    //Open camera
+    Mat image;
+    cout<<"Opening Camera..."<<endl;
+    if (!Camera.open()) {cerr<<"Error opening the camera"<<endl;return -1;}
+
+    while(true){
+           Camera.grab();
+        Camera.retrieve ( image);
+        if(image.empty()) break;
+       	transpose(image,image); //dar vuelta la imagen
+        flip(image,image,1);
+        resize(image,image,Size(image.cols/2,image.rows/2)); // se achica para disminuir el calculo-> cambiar en camara vieja
+
+        imshow("holi",image);
+        if(waitKey(0)) break;
         }
-	transpose(image,image);
-	flip(image,image,1);
-	resize(image,image,Size(image.cols/2,image.rows/2));
+
+    cout<<"Stop camera..."<<endl;
+    Camera.release();
+        return 0;
+
+}*/
+
+
+int main(int , char**)
+{
+	int fontFace=FONT_HERSHEY_SCRIPT_SIMPLEX;
+	vector<vector<Point> > squares;
+	vector<float> ders;
+	vector<Point> locs;
+	vector<float> ders2;
+	vector<Point> locs2;
+	vector<float> ders3;
+	vector<Point> locs3;
+	vector<int> type;
+   	vector<Point> centers;
+
+    raspicam::RaspiCam_Cv Camera;
+   Camera.set( CV_CAP_PROP_FORMAT, CV_8UC3 );
+
+    namedWindow( wndname, 1 );
+
+  Mat image;
+    cout<<"Opening Camera..."<<endl;
+    if (!Camera.open()) {cerr<<"Error opening the camera"<<endl;return -1;}
+
+	//seteos imagenes de muestra
+	Mat leche = imread("leche.png", 1);
+	cvtColor(leche,leche,CV_RGB2GRAY);
+	Mat carga = imread("carga.png", 1);
+	cvtColor(carga,carga,CV_RGB2GRAY);
+	Mat vasos = imread("terrines.png", 1);
+	cvtColor(vasos,vasos,CV_RGB2GRAY);
+
+	resize(leche,leche,Size(64,64),0,0,INTER_LINEAR);
+	resize(carga,carga,Size(64,64),0,0,INTER_LINEAR);
+	resize(vasos,vasos,Size(64,64),0,0,INTER_LINEAR);
+
+	//calculos hogs imagenes de muestra
+	hog.compute(leche,ders,Size(0,0),Size(0,0),locs);
+	hog.compute(carga,ders2,Size(0,0),Size(0,0),locs2);
+	hog.compute(vasos,ders3,Size(0,0),Size(0,0),locs3);
+
+	cout<<"size"<<ders.size()<<endl;
+
+     while(true){
+        Camera.grab();
+        Camera.retrieve ( image);
+        if(image.empty()) break;
+        transpose(image,image); //dar vuelta la imagen
+        flip(image,image,1);
+        resize(image,image,Size(image.cols/2,image.rows/2)); // se achica para disminuir el calculo-> cambiar en camara vieja
+
+
 
         findSquares(image, squares);
-	squares=selectSquares(squares);
-        drawSquares(image, squares);
+        selectSquares(squares,squares,centers);
+        vector<Mat> trozos=drawSquares(image, squares);
 
-        int c = waitKey();
-        if( (char)c == 27 )
-            return 1;
-    
+        for(int j=0; j<trozos.size();j++){
 
-    return 0;
+            vector<float> nder;
+            Mat dst; cvtColor(trozos[j],dst,CV_RGB2GRAY);
+            //calculo hog de la imagen
+            hog.compute(dst,nder,Size(0,0),Size(0,0),locs);
+
+            float D1=Dist(nder,ders);
+            float D2=Dist(ders2,nder);
+            float D3=Dist(ders3,nder);
+
+            cout<<"dist"<<D1<<"/"<<D2<<"/"<<D3<<endl;
+
+            if(D1<0.55f && D2<0.55f && D3<0.55f)
+                type.push_back(0);
+            else if(D1>D2 && D1>D3)
+                type.push_back(1);
+            else if(D2>D1 && D2>D3)
+                type.push_back(2);
+            else
+                type.push_back(3);
+
+            cout<<"clase "<< type[j]<<endl;
+            cout<<"cx"<<centers[j].x<<"cy"<<centers[j].y<<"Area"<<contourArea(squares[j],false)<<endl;
+            float errorx=(centers[j].x-(float)image.cols/2)/(float)image.cols/2;
+            float errory=(centers[j].y-(float)image.rows/2)/(float)image.rows/2;
+            cout<<"ex"<<errorx<<"ey"<<errory<<endl;
+
+            char num[21];
+            sprintf(num,"%d",type[j]);
+            putText(image,num,centers[j],fontFace,2,Scalar::all(255),3,8);
+
+
+        }
+
+
+    /*    imshow(wndname, image);
+            int c = waitKey();
+            if( (char)c == 27 )
+                return 1;
+
+
+        return 0;*/
+            imshow("holi",image);
+            waitKey(20);
+        }
+
+    cout<<"Stop camera..."<<endl;
+    Camera.release();
+        return 0;
 }
+

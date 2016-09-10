@@ -191,6 +191,9 @@ OpenCV_LIB_DIR_DBG:PATH=
 //Path where release OpenCV libraries are located
 OpenCV_LIB_DIR_OPT:PATH=
 
+//The directory containing a CMake configuration file for raspicam.
+raspicam_DIR:PATH=raspicam_DIR-NOTFOUND
+
 
 ########################
 # INTERNAL cache entries
