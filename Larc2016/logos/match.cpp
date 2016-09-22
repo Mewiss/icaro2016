@@ -422,7 +422,7 @@ float um=0.75f;
         }
 
 
-	resize(image,image,Size(image.cols/2,image.rows/2)); // se achica para disminuir el calculo-> cambiar en camara vieja
+	resize(image,image,Size(image.cols,image.rows)); // se achica para disminuir el calculo-> cambiar en camara vieja
 
             imshow(wndname,image);
 	if(waitKey(3)>0) break;
