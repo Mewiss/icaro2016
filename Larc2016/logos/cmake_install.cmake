@@ -1,4 +1,4 @@
-# Install script for directory: /home/pi/workspace/Larc2016/logos
+# Install script for directory: /home/pi/codes/icaro2016/Larc2016/logos
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -38,7 +38,7 @@ else()
   set(CMAKE_INSTALL_MANIFEST "install_manifest.txt")
 endif()
 
-file(WRITE "/home/pi/workspace/Larc2016/logos/${CMAKE_INSTALL_MANIFEST}" "")
+file(WRITE "/home/pi/codes/icaro2016/Larc2016/logos/${CMAKE_INSTALL_MANIFEST}" "")
 foreach(file ${CMAKE_INSTALL_MANIFEST_FILES})
-  file(APPEND "/home/pi/workspace/Larc2016/logos/${CMAKE_INSTALL_MANIFEST}" "${file}\n")
+  file(APPEND "/home/pi/codes/icaro2016/Larc2016/logos/${CMAKE_INSTALL_MANIFEST}" "${file}\n")
 endforeach()
