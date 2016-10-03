@@ -1,1 +1,1 @@
-/home/pi/workspace/Larc2016/logos/CMakeFiles/template.dir
+/home/pi/codes/icaro2016/Larc2016/logos/CMakeFiles/template.dir
