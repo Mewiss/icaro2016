@@ -1,0 +1,1 @@
+/home/pi/wiringPi/Testeos/CMakeFiles/sensor.dir

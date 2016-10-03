@@ -1,0 +1,30 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/pi/wiringPi/Testeos/test.cpp
+stdio.h
+-
+stdlib.h
+-
+wiringPi.h
+-
+wiringSerial.h
+-
+errno.h
+-
+string.h
+-
+stdlib.h
+-
+iostream
+-
+
+/usr/local/include/wiringPi.h
+
+/usr/local/include/wiringSerial.h
+
