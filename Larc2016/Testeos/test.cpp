@@ -469,7 +469,7 @@ void FollowRoute(){//std::vector<int*> route){
 
 
 void FindPos(int dist01, int dist02, int dist1, int dist2, int dist3){
-	
+	/*
 	int totalrx, totalry, meanin;
 
 	meanin = (dist01 + dist02) / 2;
@@ -484,7 +484,7 @@ void FindPos(int dist01, int dist02, int dist1, int dist2, int dist3){
 	if (abs(totalry - 200) / 200 <0.1) //probablemente rx está en el eje x
 
 	if (abs(totalry - 300) / 300 <0.1) //probablemente rx está en el eje y
-
+	*/
 }
 
 
