@@ -7,7 +7,6 @@
 #include <stdlib.h>
 #include <vector>
 
-
 #include <iostream>
 
 using namespace std;
@@ -19,9 +18,13 @@ int trig[2]={5,10};
 int echo[2]={4,11};
 int mapa[sX][sY];
 int prev[sX][sY][4];
+int numMov;
+int lastMovInd;
 int miy=-1;
 int mix=-1;
 int mio=0;
+
+std::vector< int*> route;
 
 void setup(){
 	fprintf (stderr, "seteando\n") ;
@@ -146,7 +149,7 @@ void printmap(){
 }
 
 void OneGrid(){
-    fprintf (stderr,"uno adelnate") ;
+    fprintf (stderr,"uno adelante\n") ;
 //serialPrintf (fd, "V%f\n",w) ;
 delay(1000); ///calcular tiempo que tarda
 //serialPrintf (fd, "V0\n",w) ;
@@ -154,7 +157,7 @@ delay(1000); ///calcular tiempo que tarda
 }
 
 void GiroDer(){
-    fprintf (stderr,"uno derecha") ;
+    fprintf (stderr,"uno derecha\n") ;
 //serialPrintf (fd, "V%f\n",w) ;
 delay(1000); ///calcular tiempo que tarda
 //serialPrintf (fd, "V0\n",w) ;
@@ -162,7 +165,7 @@ delay(1000); ///calcular tiempo que tarda
 }
 
 void GiroIzq(){
-    fprintf (stderr,"uno izquierda") ;
+    fprintf (stderr,"uno izquierda\n") ;
 //serialPrintf (fd, "V%f\n",w) ;
 delay(1000); ///calcular tiempo que tarda
 //serialPrintf (fd, "V0\n",w) ;
@@ -188,14 +191,15 @@ int MinDistIndex(int dist[sX][sY][4], bool visited[sX][sY][4]){
 	return min_ind;
 }
 
-vector<int*> Ruta(int destX, int destY, int destO){
+void Ruta(int destX, int destY, int destO){
 
     int values[12][16][4];
     //int prev[12][16][4];
 
     bool visited[12][16][4];
 
-    vector< int* > route;
+//    vector< int* > route;
+    route.clear();
 
     for (int y=0; y<sY ;y++ ){
 
@@ -238,8 +242,12 @@ vector<int*> Ruta(int destX, int destY, int destO){
 		fprintf (stderr, "la ruta es\n") ;
 
 		int ind_=ind;
+		lastMovInd=ind;
+		numMov=0;
 		while(1)
 		{
+		numMov++;
+
         int o_=(int) ind_/(sX*sY);
         int x_=(ind_%(sX*sY))%sX;
         int y_=(int)(ind_%(sX*sY))/sX;
@@ -247,19 +255,19 @@ vector<int*> Ruta(int destX, int destY, int destO){
         int aux[3]={x_,y_,o_};
 
 
-        route.push_back(aux);
-
         fprintf (stderr, "x:%i y: %i o: %i \n",x_,y_,o_) ;
 		if (x_==mix && y_== miy && o_==mio) break;
+
 			ind_=prev[x_][y_][o_];
+			 route.push_back(aux);
 		}
 
         break;
 	}
 
-	if(values[x][y][0]==1000) {
+    /*	if(values[x][y][0]==1000) {
             vector<int*> nada;
-            return nada;}
+            return nada;}*/
 
 	//calcular distancias de vecinos
 
@@ -308,36 +316,61 @@ vector<int*> Ruta(int destX, int destY, int destO){
 
 
 	}
-return route;
+
+
+//return route;
 
 }
 
-void FollowRoute(vector<int*> route){
+void FollowRoute(){//std::vector<int*> route){
+
+    fprintf (stderr, "llegó la ruta es\n") ;
     int curro=mio;
 
-    while(!route.empty()){
+	int ruta[numMov][3];
+	int ind_=lastMovInd;
+	int i=numMov-1;
+	while(1)
+		{
 
-        //int pos[3]=route.back();
-        int* pos=route.back();
+       		int o_=(int) ind_/(sX*sY);
+	        int x_=(ind_%(sX*sY))%sX;
+        	int y_=(int)(ind_%(sX*sY))/sX;
 
-        if(curro==pos[2])
+        	//fprintf (stderr, "i: %i x:%i y: %i o: %i \n",i,x_,y_,o_) ;
+		if (x_==mix && y_== miy && o_==mio) break;
+
+			 ruta[i][0]=x_;
+			 ruta[i][1]=y_;
+			 ruta[i][2]=o_;
+		i--;
+
+		ind_=prev[x_][y_][o_];
+		}
+
+
+
+	for(i=1; i<numMov; i++){
+
+	fprintf (stderr, "i: %i x:%i y: %i o: %i \n",i,ruta[i][0],ruta[i][1],ruta[i][2]) ;
+        if(curro==ruta[i][2])
             OneGrid();
 
-        else if(pos[2]+1==curro)
+        else if(ruta[i][2]==curro+1)
             GiroDer();
 
-        else if(pos[2]-1==curro)
+        else if(ruta[i][2]==curro-1)
             GiroIzq();
 
-        else if(pos[2]==0)
+        else if(ruta[i][2]==0)
             GiroDer();
 
-        else if(pos[2]==0)
+        else if(ruta[i][2]==3)
             GiroIzq();
 
 
-        curro=pos[2];
-            route.pop_back();
+        curro=ruta[i][2];
+
     }
 
 }
@@ -347,14 +380,60 @@ void FollowRoute(vector<int*> route){
 
 
 int main(void){
-
+/*
 initmap();
 
 setPos();
 
 printmap();
 
-vector<int*> ruta=Ruta(11,15,2);
-FollowRoute(ruta);
+//vector<int*> ruta=Ruta(11,15,2);
+//FollowRoute(ruta);
 
+
+Ruta(11,15,2);
+FollowRoute();
+*/
+
+    fprintf (stderr, "fin") ;
+
+int fd ;
+
+  if ((fd = serialOpen ("/dev/ttyUSB0", 9600)) < 0)
+  {
+    fprintf (stderr, "Unable to open serial device: %s\n", strerror (errno)) ;
+    //return 1 ;
+  }
+
+fprintf (stderr, "Hola Mundos\n") ;
+
+setup();
+
+
+fprintf (stderr, "bkn\n") ;
+//serialPrintf (fd, "HOLA ARDUINO, habla la raspi\n") ;
+
+while(1){
+
+
+int DistCD=getCM(0);
+//delay(30);
+int DistCI=getCM(1);
+
+
+int Dif = DistCD-DistCI;
+//fprintf (stderr,"Distance: %icm\n");
+fprintf (stderr,"Distance: %icm Distance2: %icm Difference: %icm\n", DistCI,DistCD, Dif);
+
+//fprintf (stderr,"");
+
+if(DistCD<0 || DistCI<0 || abs(Dif)>20) continue;
+
+float w=AlinControl(Dif);
+fprintf (stderr,"Vel: %fcm\n", w);
+
+
+serialPrintf (fd, "W%f\n",w) ;}
+
+return 1;
 }
