@@ -18,8 +18,10 @@ using namespace std;
 int trig[2]={5,10};
 int echo[2]={4,11};
 int mapa[sX][sY];
+int prev[sX][sY][4];
 int miy=-1;
 int mix=-1;
+int mio=0;
 
 void setup(){
 	fprintf (stderr, "seteando\n") ;
@@ -104,7 +106,6 @@ void initmap(){
 // 1 vaca, 2 mesa vacios, 3 mesa llenos, 4 tanque
 
 
-
 // mesa vacios
 
 mapa[10][7]=2;
@@ -122,131 +123,224 @@ mapa[1][8]=3;
 
 }
 
-void printmap(){
-
+void setPos(){
     miy=0;
     mix=0;
-for (int y=0; y<sY ;y++ ){
+    mio=0;
 
-for (int x=0; x<sX ;x++ ){
-
-    if(x==mix && y==miy)
-    fprintf (stderr, "T") ;
-    else
-	fprintf (stderr, "%i",mapa[x][y]) ;
-	}
-
-	fprintf (stderr, "\n") ;
 }
+
+void printmap(){
+    for (int y=0; y<sY ;y++ ){
+
+    for (int x=0; x<sX ;x++ ){
+
+        if(x==mix && y==miy)
+        fprintf (stderr, "T") ;
+        else
+        fprintf (stderr, "%i",mapa[x][y]) ;
+        }
+
+        fprintf (stderr, "\n") ;
+    }
 }
 
 void OneGrid(){
+    fprintf (stderr,"uno adelnate") ;
 //serialPrintf (fd, "V%f\n",w) ;
 delay(1000); ///calcular tiempo que tarda
 //serialPrintf (fd, "V0\n",w) ;
 
 }
 
-int MinDistIndex(int dist[sX][sY], bool visited[sX][sY]){
+void GiroDer(){
+    fprintf (stderr,"uno derecha") ;
+//serialPrintf (fd, "V%f\n",w) ;
+delay(1000); ///calcular tiempo que tarda
+//serialPrintf (fd, "V0\n",w) ;
+
+}
+
+void GiroIzq(){
+    fprintf (stderr,"uno izquierda") ;
+//serialPrintf (fd, "V%f\n",w) ;
+delay(1000); ///calcular tiempo que tarda
+//serialPrintf (fd, "V0\n",w) ;
+
+}
+
+int MinDistIndex(int dist[sX][sY][4], bool visited[sX][sY][4]){
 	int mind=1000;
 	int min_ind;
 	 for (int y=0; y<sY ;y++ ){
 
         for (int x=0; x<sX ;x++ ){
-	
-	if(visited[x][y]==false && dist[x][y]<mind )
-	{
-	mind=dist[x][y];
-	min_ind=y*sX+x;
-	}
-	}
-	}
+                for (int o=0; o<4; o++ ){
 
+            if(visited[x][y][o]==false && dist[x][y][o]<mind )
+            {
+            mind=dist[x][y][o];
+            min_ind=y*sX+x+o*(sX*sY);
+            }
+        }
+        }
+	 }
 	return min_ind;
 }
 
-void Ruta(int destX, int destY){
+vector<int*> Ruta(int destX, int destY, int destO){
 
-    int values[12][16];
-    int prev[12][16];
-    bool visited[12][16];
-	
+    int values[12][16][4];
+    //int prev[12][16][4];
 
+    bool visited[12][16][4];
+
+    vector< int* > route;
 
     for (int y=0; y<sY ;y++ ){
 
         for (int x=0; x<sX ;x++ ){
 
-            if(x==mix && y==miy)
-            {values[x][y]=0;
-		visited[x][y]=false;}
-            else
-            {values[x][y]=1000;
-            if(mapa[x][y]==0){
-            int aux[2]={x,y};
-            visited[x][y]=false;}}
+		for(int o=0; o<4; o++){
 
-		prev[x][y]=-1;
-            }
+	            if(x==mix && y==miy && o==mio)
+	            {values[x][y][o]=0;
+                visited[x][y][o]=false;}
+	            else
+	            {values[x][y][o]=1000;
+	            if(mapa[x][y]==0){
+
+	            visited[x][y][o]=false;}
+	            }
+
+			prev[x][y][o]=-1;
+	            }
 
 
-        }
+	        }
+	}
 
-    int curX=mix;
-    int curY=miy;
 
 	while(1){
 
-		
+
 	int ind=MinDistIndex(values, visited);
-	int x=ind%sX;
-	int y=(int)ind/sX;
-	visited[x][y]=true;
+    int o=(int) ind/(sX*sY);
+
+	int x=(ind%(sX*sY))%sX;
+	int y=(int)(ind%(sX*sY))/sX;
+	visited[x][y][o]=true;
 
 
 	//fprintf (stderr, "x:%i/ y: %i ",x,y) ;
-	
-	if(x==destX && y==destY) {
-		fprintf (stderr, "ruta\n") ;
-		
+
+	if(x==destX && y==destY && o==destO) {
+		fprintf (stderr, "la ruta es\n") ;
+
 		int ind_=ind;
 		while(1)
-		{	
-			int x_=ind_%sX;
-			int y_=(int)ind_/sX;
-			fprintf (stderr, "x:%i/ y: %i ",x_,y_) ;
-			if (x_==mix && y_== miy) break;
-			ind_=prev[x_][y_];
+		{
+        int o_=(int) ind_/(sX*sY);
+        int x_=(ind_%(sX*sY))%sX;
+        int y_=(int)(ind_%(sX*sY))/sX;
+
+        int aux[3]={x_,y_,o_};
+
+
+        route.push_back(aux);
+
+        fprintf (stderr, "x:%i y: %i o: %i \n",x_,y_,o_) ;
+		if (x_==mix && y_== miy && o_==mio) break;
+			ind_=prev[x_][y_][o_];
 		}
-	break;
+
+        break;
 	}
-	
+
+	if(values[x][y][0]==1000) {
+            vector<int*> nada;
+            return nada;}
+
 	//calcular distancias de vecinos
-	
+
+	//girar derecha
+	if(mapa[x][y]==0 && visited[x][y][o+1]==false && values[x][y][o]+2<values[x][y][o+1] && o+1<4)
+	{values[x][y][o+1]=values[x][y][o]+2;
+	prev[x][y][o+1]=ind;}
+
+	//girar derecha
+	if(mapa[x][y]==0 && visited[x][y][0]==false && values[x][y][o]+2<values[x][y][0] && o==3)
+	{values[x][y][0]=values[x][y][o]+2;
+	prev[x][y][0]=ind;}
+
+    //girar izquierda
+	if(mapa[x][y]==0 && visited[x][y][o-1]==false && values[x][y][o]+2<values[x][y][o-1] && o-1>0)
+	{values[x][y][o-1]=values[x][y][o]+2;
+	prev[x][y][o-1]=ind;}
+
+	    //girar izquierda
+	if(mapa[x][y]==0 && visited[x][y][3]==false && values[x][y][o]+2<values[x][y][3] && o==0)
+	{values[x][y][3]=values[x][y][o]+2;
+	prev[x][y][3]=ind;}
+
+	///AVANZAR 1
+
+
 	//vecino de arriba
-	if(mapa[x][y-1]==0 && visited[x][y-1]==false && values[x][y]+1<values[x][y-1] && y-1>=0)
-	{values[x][y-1]=values[x][y]+1;
-	prev[x][y-1]=ind;}
+	if(mapa[x][y-1]==0 && visited[x][y-1][o]==false && values[x][y][o]+1<values[x][y-1][o] && y-1>=0 && o==0)
+	{values[x][y-1][o]=values[x][y][o]+1;
+	prev[x][y-1][o]=ind;}
 
 	//vecino de abajo
-	if(mapa[x][y+1]==0 && visited[x][y+1]==false && values[x][y]+1<values[x][y+1] && y+1<sY)
-	{values[x][y+1]=values[x][y]+1;
-	prev[x][y+1]=ind;}
+	if(mapa[x][y+1]==0 && visited[x][y+1][o]==false && values[x][y][o]+1<values[x][y+1][o] && y+1<sY && o ==2)
+	{values[x][y+1][o]=values[x][y][o]+1;
+	prev[x][y+1][o]=ind;}
 
 	//vecino derecha
-	if(mapa[x+1][y]==0 && visited[x+1][y]==false && values[x][y]+1<values[x+1][y] && x+1<sX)
-	{values[x+1][y]=values[x][y]+1;
-	prev[x+1][y]=ind;}
+	if(mapa[x+1][y]==0 && visited[x+1][y][o]==false && values[x][y][o]+1<values[x+1][y][o] && x+1<sX&& o==1)
+	{values[x+1][y][o]=values[x][y][o]+1;
+	prev[x+1][y][o]=ind;}
 
 	//vecino izquierda
-	if(mapa[x-1][y]==0 && visited[x-1][y]==false && values[x][y]+1<values[x-1][y]&& x-1>=0)
-	{values[x-1][y]=values[x][y]+1;	
-	prev[x-1][y]=ind;}
-	
+	if(mapa[x-1][y]==0 && visited[x-1][y][o]==false && values[x][y][o]+1<values[x-1][y][o]&& x-1>=0 && o==3)
+	{values[x-1][y][o]=values[x][y][o]+1;
+	prev[x-1][y][o]=ind;}
+
 
 	}
+return route;
+
 }
 
+void FollowRoute(vector<int*> route){
+    int curro=mio;
+
+    while(!route.empty()){
+
+        //int pos[3]=route.back();
+        int* pos=route.back();
+
+        if(curro==pos[2])
+            OneGrid();
+
+        else if(pos[2]+1==curro)
+            GiroDer();
+
+        else if(pos[2]-1==curro)
+            GiroIzq();
+
+        else if(pos[2]==0)
+            GiroDer();
+
+        else if(pos[2]==0)
+            GiroIzq();
+
+
+        curro=pos[2];
+            route.pop_back();
+    }
+
+}
 
 
 
@@ -256,52 +350,11 @@ int main(void){
 
 initmap();
 
+setPos();
+
 printmap();
 
-Ruta(10,12);
-
-fprintf (stderr, "Comenzar\n") ;
-int fd ;
-
-  if ((fd = serialOpen ("/dev/ttyUSB0", 9600)) < 0)
-  {
-    fprintf (stderr, "Unable to open serial device: %s\n", strerror (errno)) ;
-    //return 1 ;
-  }
-
-fprintf (stderr, "Hola Mundos\n") ;
-
-setup();
-
-
-fprintf (stderr, "bkn\n") ;
-//serialPrintf (fd, "HOLA ARDUINO, habla la raspi\n") ;
-
-while(1){
-
-
-int DistCD=getCM(0);
-//delay(30);
-int DistCI=getCM(1);
-
-
-int Dif = DistCD-DistCI;
-//fprintf (stderr,"Distance: %icm\n");
-fprintf (stderr,"Distance: %icm Distance2: %icm Difference: %icm\n", DistCI,DistCD, Dif);
-
-//fprintf (stderr,"");
-
-if(DistCD<0 || DistCI<0 || abs(Dif)>20) continue;
-
-float w=AlinControl(Dif);
-fprintf (stderr,"Vel: %fcm\n", w);
-
-
-serialPrintf (fd, "W%f\n",w) ;
-
-
-}
-
-  return 0 ;
+vector<int*> ruta=Ruta(11,15,2);
+FollowRoute(ruta);
 
 }

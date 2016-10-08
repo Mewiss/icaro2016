@@ -47,10 +47,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/pi/wiringPi/Testeos
+CMAKE_SOURCE_DIR = /home/pi/workspace/Larc2016/Testeos
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/pi/wiringPi/Testeos
+CMAKE_BINARY_DIR = /home/pi/workspace/Larc2016/Testeos
 
 #=============================================================================
 # Target rules for target CMakeFiles/sensor.dir
@@ -59,7 +59,7 @@ CMAKE_BINARY_DIR = /home/pi/wiringPi/Testeos
 CMakeFiles/sensor.dir/all:
 	$(MAKE) -f CMakeFiles/sensor.dir/build.make CMakeFiles/sensor.dir/depend
 	$(MAKE) -f CMakeFiles/sensor.dir/build.make CMakeFiles/sensor.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/pi/wiringPi/Testeos/CMakeFiles  1
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/pi/workspace/Larc2016/Testeos/CMakeFiles  1
 	@echo "Built target sensor"
 .PHONY : CMakeFiles/sensor.dir/all
 
@@ -69,9 +69,9 @@ all: CMakeFiles/sensor.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/sensor.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/wiringPi/Testeos/CMakeFiles 1
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/workspace/Larc2016/Testeos/CMakeFiles 1
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/sensor.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/wiringPi/Testeos/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/workspace/Larc2016/Testeos/CMakeFiles 0
 .PHONY : CMakeFiles/sensor.dir/rule
 
 # Convenience name for target.

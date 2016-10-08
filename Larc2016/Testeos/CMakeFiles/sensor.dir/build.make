@@ -35,10 +35,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/pi/wiringPi/Testeos
+CMAKE_SOURCE_DIR = /home/pi/workspace/Larc2016/Testeos
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/pi/wiringPi/Testeos
+CMAKE_BINARY_DIR = /home/pi/workspace/Larc2016/Testeos
 
 # Include any dependencies generated for this target.
 include CMakeFiles/sensor.dir/depend.make
@@ -51,17 +51,17 @@ include CMakeFiles/sensor.dir/flags.make
 
 CMakeFiles/sensor.dir/test.cpp.o: CMakeFiles/sensor.dir/flags.make
 CMakeFiles/sensor.dir/test.cpp.o: test.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/pi/wiringPi/Testeos/CMakeFiles $(CMAKE_PROGRESS_1)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/pi/workspace/Larc2016/Testeos/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/sensor.dir/test.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/sensor.dir/test.cpp.o -c /home/pi/wiringPi/Testeos/test.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/sensor.dir/test.cpp.o -c /home/pi/workspace/Larc2016/Testeos/test.cpp
 
 CMakeFiles/sensor.dir/test.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/sensor.dir/test.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/pi/wiringPi/Testeos/test.cpp > CMakeFiles/sensor.dir/test.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/pi/workspace/Larc2016/Testeos/test.cpp > CMakeFiles/sensor.dir/test.cpp.i
 
 CMakeFiles/sensor.dir/test.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/sensor.dir/test.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/pi/wiringPi/Testeos/test.cpp -o CMakeFiles/sensor.dir/test.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/pi/workspace/Larc2016/Testeos/test.cpp -o CMakeFiles/sensor.dir/test.cpp.s
 
 CMakeFiles/sensor.dir/test.cpp.o.requires:
 .PHONY : CMakeFiles/sensor.dir/test.cpp.o.requires
@@ -153,6 +153,6 @@ CMakeFiles/sensor.dir/clean:
 .PHONY : CMakeFiles/sensor.dir/clean
 
 CMakeFiles/sensor.dir/depend:
-	cd /home/pi/wiringPi/Testeos && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/pi/wiringPi/Testeos /home/pi/wiringPi/Testeos /home/pi/wiringPi/Testeos /home/pi/wiringPi/Testeos /home/pi/wiringPi/Testeos/CMakeFiles/sensor.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/pi/workspace/Larc2016/Testeos && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/pi/workspace/Larc2016/Testeos /home/pi/workspace/Larc2016/Testeos /home/pi/workspace/Larc2016/Testeos /home/pi/workspace/Larc2016/Testeos /home/pi/workspace/Larc2016/Testeos/CMakeFiles/sensor.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/sensor.dir/depend
 

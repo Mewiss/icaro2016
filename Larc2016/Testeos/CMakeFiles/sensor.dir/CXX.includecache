@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/pi/wiringPi/Testeos/test.cpp
+/home/pi/workspace/Larc2016/Testeos/test.cpp
 stdio.h
 -
 stdlib.h
@@ -20,6 +20,8 @@ errno.h
 string.h
 -
 stdlib.h
+-
+vector
 -
 iostream
 -

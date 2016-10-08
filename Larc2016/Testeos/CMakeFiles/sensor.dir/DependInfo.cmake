@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/pi/wiringPi/Testeos/test.cpp" "/home/pi/wiringPi/Testeos/CMakeFiles/sensor.dir/test.cpp.o"
+  "/home/pi/workspace/Larc2016/Testeos/test.cpp" "/home/pi/workspace/Larc2016/Testeos/CMakeFiles/sensor.dir/test.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

@@ -47,45 +47,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/pi/workspace/Larc2016/logos
+CMAKE_SOURCE_DIR = /home/pi/workspace/Larc2016/logos/build
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/pi/workspace/Larc2016/logos
-
-#=============================================================================
-# Target rules for target CMakeFiles/template.dir
-
-# All Build rule for target.
-CMakeFiles/template.dir/all:
-	$(MAKE) -f CMakeFiles/template.dir/build.make CMakeFiles/template.dir/depend
-	$(MAKE) -f CMakeFiles/template.dir/build.make CMakeFiles/template.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/pi/workspace/Larc2016/logos/CMakeFiles  1
-	@echo "Built target template"
-.PHONY : CMakeFiles/template.dir/all
-
-# Include target in all.
-all: CMakeFiles/template.dir/all
-.PHONY : all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/template.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/workspace/Larc2016/logos/CMakeFiles 1
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/template.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/workspace/Larc2016/logos/CMakeFiles 0
-.PHONY : CMakeFiles/template.dir/rule
-
-# Convenience name for target.
-template: CMakeFiles/template.dir/rule
-.PHONY : template
-
-# clean rule for target.
-CMakeFiles/template.dir/clean:
-	$(MAKE) -f CMakeFiles/template.dir/build.make CMakeFiles/template.dir/clean
-.PHONY : CMakeFiles/template.dir/clean
-
-# clean rule for target.
-clean: CMakeFiles/template.dir/clean
-.PHONY : clean
+CMAKE_BINARY_DIR = /home/pi/workspace/Larc2016/logos/build
 
 #=============================================================================
 # Special targets to cleanup operation of make.

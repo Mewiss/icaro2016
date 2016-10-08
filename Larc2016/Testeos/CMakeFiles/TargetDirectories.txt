@@ -1,1 +1,1 @@
-/home/pi/wiringPi/Testeos/CMakeFiles/sensor.dir
+/home/pi/workspace/Larc2016/Testeos/CMakeFiles/sensor.dir
