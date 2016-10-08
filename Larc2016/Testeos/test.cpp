@@ -232,7 +232,7 @@ bool ValidMov(int x, int  y, int o, int tipo){
 		}
 
 		else if (o == 1){
-			if (x<1 || y>Sy-2) return false;
+			if (x<1 || y>sY-2) return false;
 
 			else if (mapa[x - 1][y + 1] != 0 || mapa[x][y + 1] != 0) return false;
 
@@ -489,7 +489,7 @@ void FindPos(int dist01, int dist02, int dist1, int dist2, int dist3){
 
 
 int main(void){
-	/*
+	
 	initmap();
 
 	setPos();
@@ -502,7 +502,7 @@ int main(void){
 
 	Ruta(11,15,2);
 	FollowRoute();
-	*/
+	/*
 
 	fprintf (stderr, "fin") ;
 
@@ -542,7 +542,7 @@ int main(void){
 	fprintf (stderr,"Vel: %fcm\n", w);
 
 
-	serialPrintf (fd, "W%f\n",w) ;}
+	serialPrintf (fd, "W%f\n",w) ;}*/
 
 	return 1;
 }
