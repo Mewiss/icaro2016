@@ -172,6 +172,95 @@ delay(1000); ///calcular tiempo que tarda
 
 }
 
+bool ValidMov(int x, int  y, int o, int tipo){
+
+	if (tipo == 0) // avanzar
+	{
+		return true;
+
+	}
+
+	else if (tipo == 1) // giro a la derecha
+	{
+		if (o == 0){
+			if (x<1 || y>sY - 2) return false;
+
+			else if (mapa[x - 1][y] != 0 || mapa[x - 1][y + 1] != 0) return false;
+
+			else return true;
+
+		}
+
+		else if (o == 1){
+			if (x<1 || y<1) return false;
+
+			else if (mapa[x - 1][y-1] != 0 || mapa[x ][y - 1] != 0) return false;
+
+			else return true;
+
+		}
+
+		else if (o == 2){
+			if (x>sX-2) return false;
+
+			else if (mapa[x + 1][y - 1] != 0 || mapa[x+1][y] != 0) return false;
+
+			else return true;
+
+		}
+
+		else {
+			if (y>sY-2) return false;
+
+			else if (mapa[x + 1][y + 1] != 0 || mapa[x][y + 1] != 0) return false;
+
+			else return true;
+
+		}
+	}
+
+
+	else if (tipo == 2) // giro a la izquierda
+	{
+		if (o == 0){
+			if (x<sX-2 ) return false;
+
+			else if (mapa[x + 1][y+1] != 0 || mapa[x + 1][y] != 0) return false;
+
+			else return true;
+
+		}
+
+		else if (o == 1){
+			if (x<1 || y>Sy-2) return false;
+
+			else if (mapa[x - 1][y + 1] != 0 || mapa[x][y + 1] != 0) return false;
+
+			else return true;
+
+		}
+
+		else if (o == 2){
+			if (x>sX - 2) return false;
+
+			else if (mapa[x - 1][y - 1] != 0 || mapa[x - 1][y] != 0) return false;
+
+			else return true;
+
+		}
+
+		else {
+			if (y<1) return false;
+
+			else if (mapa[x + 1][y - 1] != 0 || mapa[x][y - 1] != 0) return false;
+
+			else return true;
+
+		}
+	}
+
+}
+
 int MinDistIndex(int dist[sX][sY][4], bool visited[sX][sY][4]){
 	int mind=1000;
 	int min_ind;
@@ -271,23 +360,26 @@ void Ruta(int destX, int destY, int destO){
 
 	//calcular distancias de vecinos
 
+	bool derOk = ValidMov(x, y, o, 1);
+	bool izqOk = ValidMov(x, y, o, 2);
+
 	//girar derecha
-	if(mapa[x][y]==0 && visited[x][y][o+1]==false && values[x][y][o]+2<values[x][y][o+1] && o+1<4)
+	if(derOk && mapa[x][y]==0 && visited[x][y][o+1]==false && values[x][y][o]+2<values[x][y][o+1] && o+1<4)
 	{values[x][y][o+1]=values[x][y][o]+2;
 	prev[x][y][o+1]=ind;}
 
 	//girar derecha
-	if(mapa[x][y]==0 && visited[x][y][0]==false && values[x][y][o]+2<values[x][y][0] && o==3)
+	if(derOk && mapa[x][y]==0 && visited[x][y][0]==false && values[x][y][o]+2<values[x][y][0] && o==3)
 	{values[x][y][0]=values[x][y][o]+2;
 	prev[x][y][0]=ind;}
 
     //girar izquierda
-	if(mapa[x][y]==0 && visited[x][y][o-1]==false && values[x][y][o]+2<values[x][y][o-1] && o-1>0)
+	if(izqOk && mapa[x][y]==0 && visited[x][y][o-1]==false && values[x][y][o]+2<values[x][y][o-1] && o-1>0)
 	{values[x][y][o-1]=values[x][y][o]+2;
 	prev[x][y][o-1]=ind;}
 
 	    //girar izquierda
-	if(mapa[x][y]==0 && visited[x][y][3]==false && values[x][y][o]+2<values[x][y][3] && o==0)
+	if(izqOk && mapa[x][y]==0 && visited[x][y][3]==false && values[x][y][o]+2<values[x][y][3] && o==0)
 	{values[x][y][3]=values[x][y][o]+2;
 	prev[x][y][3]=ind;}
 
@@ -376,64 +468,81 @@ void FollowRoute(){//std::vector<int*> route){
 }
 
 
+void FindPos(int dist01, int dist02, int dist1, int dist2, int dist3){
+	
+	int totalrx, totalry, meanin;
 
+	meanin = (dist01 + dist02) / 2;
+
+	totalrx = 25 + dist1 + dist3;
+	totalry = 33 + dist2 + meanin;
+
+	if (abs(totalrx-200)/200 <0.1) //probablemente rx está en el eje x
+
+	if (abs(totalrx - 300) / 300 <0.1) //probablemente rx está en el eje y
+
+	if (abs(totalry - 200) / 200 <0.1) //probablemente rx está en el eje x
+
+	if (abs(totalry - 300) / 300 <0.1) //probablemente rx está en el eje y
+
+}
 
 
 int main(void){
-/*
-initmap();
+	/*
+	initmap();
 
-setPos();
+	setPos();
 
-printmap();
+	printmap();
 
-//vector<int*> ruta=Ruta(11,15,2);
-//FollowRoute(ruta);
-
-
-Ruta(11,15,2);
-FollowRoute();
-*/
-
-    fprintf (stderr, "fin") ;
-
-int fd ;
-
-  if ((fd = serialOpen ("/dev/ttyUSB0", 9600)) < 0)
-  {
-    fprintf (stderr, "Unable to open serial device: %s\n", strerror (errno)) ;
-    //return 1 ;
-  }
-
-fprintf (stderr, "Hola Mundos\n") ;
-
-setup();
+	//vector<int*> ruta=Ruta(11,15,2);
+	//FollowRoute(ruta);
 
 
-fprintf (stderr, "bkn\n") ;
-//serialPrintf (fd, "HOLA ARDUINO, habla la raspi\n") ;
+	Ruta(11,15,2);
+	FollowRoute();
+	*/
 
-while(1){
+	fprintf (stderr, "fin") ;
 
+	int fd ;
 
-int DistCD=getCM(0);
-//delay(30);
-int DistCI=getCM(1);
+	  if ((fd = serialOpen ("/dev/ttyUSB0", 9600)) < 0)
+	  {
+		fprintf (stderr, "Unable to open serial device: %s\n", strerror (errno)) ;
+		//return 1 ;
+	  }
 
+	fprintf (stderr, "Hola Mundos\n") ;
 
-int Dif = DistCD-DistCI;
-//fprintf (stderr,"Distance: %icm\n");
-fprintf (stderr,"Distance: %icm Distance2: %icm Difference: %icm\n", DistCI,DistCD, Dif);
-
-//fprintf (stderr,"");
-
-if(DistCD<0 || DistCI<0 || abs(Dif)>20) continue;
-
-float w=AlinControl(Dif);
-fprintf (stderr,"Vel: %fcm\n", w);
+	setup();
 
 
-serialPrintf (fd, "W%f\n",w) ;}
+	fprintf (stderr, "bkn\n") ;
+	//serialPrintf (fd, "HOLA ARDUINO, habla la raspi\n") ;
 
-return 1;
+	while(1){
+
+
+	int DistCD=getCM(0);
+	//delay(30);
+	int DistCI=getCM(1);
+
+
+	int Dif = DistCD-DistCI;
+	//fprintf (stderr,"Distance: %icm\n");
+	fprintf (stderr,"Distance: %icm Distance2: %icm Difference: %icm\n", DistCI,DistCD, Dif);
+
+	//fprintf (stderr,"");
+
+	if(DistCD<0 || DistCI<0 || abs(Dif)>20) continue;
+
+	float w=AlinControl(Dif);
+	fprintf (stderr,"Vel: %fcm\n", w);
+
+
+	serialPrintf (fd, "W%f\n",w) ;}
+
+	return 1;
 }
