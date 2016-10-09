@@ -129,7 +129,7 @@ mapa[1][8]=3;
 void setPos(){
     miy=0;
     mix=0;
-    mio=0;
+    mio=2;
 
 }
 
@@ -500,7 +500,7 @@ int main(void){
 	//FollowRoute(ruta);
 
 
-	Ruta(11,15,2);
+	Ruta(9,3,2);
 	FollowRoute();
 	/*
 
